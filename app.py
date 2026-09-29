@@ -20,8 +20,10 @@ def home():
 
         if not city:
             error = "Please enter a city."
+
         elif not API_KEY:
             error = "Weather API key is missing."
+
         else:
             url = "https://api.openweathermap.org/data/2.5/weather"
 
@@ -32,7 +34,12 @@ def home():
             }
 
             try:
-                response = requests.get(url, params=params, timeout=10)
+                response = requests.get(
+                    url,
+                    params=params,
+                    timeout=10
+                )
+
                 data = response.json()
 
                 if response.status_code == 200:
@@ -46,14 +53,25 @@ def home():
                         "icon": data["weather"][0]["icon"],
                         "wind": round(data["wind"]["speed"] * 3.6, 1)
                     }
-               elif response.status_code == 404:
-    error = "City not found. Try another city."
-else:
-    error = data.get("message", "Unable to get weather data.")
-    print("OpenWeather error:", response.status_code, data)
 
-            except requests.RequestException:
+                elif response.status_code == 404:
+                    error = "City not found. Try another city."
+
+                else:
+                    error = data.get(
+                        "message",
+                        "Unable to get weather data."
+                    )
+
+                    print(
+                        "OpenWeather error:",
+                        response.status_code,
+                        data
+                    )
+
+            except requests.RequestException as e:
                 error = "Could not connect to the weather service."
+                print("Request error:", e)
 
     return render_template(
         "index.html",
