@@ -46,10 +46,11 @@ def home():
                         "icon": data["weather"][0]["icon"],
                         "wind": round(data["wind"]["speed"] * 3.6, 1)
                     }
-                elif response.status_code == 404:
-                    error = "City not found. Try another city."
-                else:
-                    error = "Unable to get weather data."
+               elif response.status_code == 404:
+    error = "City not found. Try another city."
+else:
+    error = data.get("message", "Unable to get weather data.")
+    print("OpenWeather error:", response.status_code, data)
 
             except requests.RequestException:
                 error = "Could not connect to the weather service."
