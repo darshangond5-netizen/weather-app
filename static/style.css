@@ -1,0 +1,310 @@
+/* ==========================================================================
+   Variables & Dynamic Theme Palette Transitions
+   ========================================================================== */
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+    --card-bg: rgba(255, 255, 255, 0.08);
+    --card-border: rgba(255, 255, 255, 0.15);
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --accent-glow: rgba(99, 102, 241, 0.35);
+    --orb-1: #38bdf8;
+    --orb-2: #6366f1;
+}
+
+/* Rain / Stormy Theme */
+[data-theme*="rain"], [data-theme*="drizzle"], [data-theme*="thunderstorm"] {
+    --bg-gradient: linear-gradient(135deg, #0f172a, #1e1b4b);
+    --card-bg: rgba(30, 41, 59, 0.45);
+    --accent-glow: rgba(56, 189, 248, 0.3);
+    --orb-1: #0284c7;
+    --orb-2: #312e81;
+}
+
+/* Sunny / Clear Sky Theme */
+[data-theme*="clear"], [data-theme*="sun"] {
+    --bg-gradient: linear-gradient(135deg, #0284c7, #38bdf8);
+    --card-bg: rgba(255, 255, 255, 0.18);
+    --accent-glow: rgba(253, 224, 71, 0.4);
+    --orb-1: #fbbf24;
+    --orb-2: #f97316;
+}
+
+/* Cloudy Atmosphere */
+[data-theme*="cloud"] {
+    --bg-gradient: linear-gradient(135deg, #334155, #475569);
+    --card-bg: rgba(255, 255, 255, 0.12);
+    --accent-glow: rgba(148, 163, 184, 0.3);
+    --orb-1: #64748b;
+    --orb-2: #94a3b8;
+}
+
+/* Snow Theme */
+[data-theme*="snow"] {
+    --bg-gradient: linear-gradient(135deg, #1e293b, #334155);
+    --card-bg: rgba(255, 255, 255, 0.2);
+    --accent-glow: rgba(224, 242, 254, 0.4);
+    --orb-1: #e0f2fe;
+    --orb-2: #bae6fd;
+}
+
+/* ==========================================================================
+   Global Reset & Layout Configuration
+   ========================================================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    transition: background 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+body {
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    perspective: 1000px;
+}
+
+/* Animated Ambient Sky Background */
+.sky-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    overflow: hidden;
+}
+
+#weatherCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.6;
+    animation: floatOrb 12s infinite alternate ease-in-out;
+}
+
+.orb-1 {
+    width: 320px;
+    height: 320px;
+    background: var(--orb-1);
+    top: 10%;
+    left: 15%;
+}
+
+.orb-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--orb-2);
+    bottom: 10%;
+    right: 15%;
+    animation-delay: -6s;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, 50px) scale(1.15); }
+}
+
+/* ==========================================================================
+   3D Interactive Card & Glassmorphism
+   ========================================================================== */
+.scene {
+    position: relative;
+    z-index: 10;
+    padding: 20px;
+    perspective: 1000px;
+}
+
+.container {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    padding: 35px 28px;
+    border-radius: 32px;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.15s ease-out;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 24px;
+    transform: translateZ(30px);
+}
+
+/* ==========================================================================
+   Search Input Form Styling
+   ========================================================================== */
+.search-box {
+    margin-bottom: 25px;
+    transform: translateZ(25px);
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+input {
+    width: 100%;
+    padding: 16px 50px 16px 20px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    font-size: 16px;
+    color: #ffffff;
+    outline: none;
+    backdrop-filter: blur(10px);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+input:focus {
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+button {
+    position: absolute;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(1.05);
+}
+
+/* ==========================================================================
+   Weather Content & 3D Elements
+   ========================================================================== */
+.location-tag {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transform: translateZ(30px);
+}
+
+.visualizer-container {
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.weather-3d-visual {
+    transform-style: preserve-3d;
+    transform: translateZ(40px);
+    transition: transform 0.2s ease-out;
+}
+
+.weather-icon-3d {
+    width: 130px;
+    filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.3));
+    animation: floatIcon 4s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(3deg); }
+}
+
+.temp-display {
+    transform: translateZ(35px);
+    line-height: 1;
+}
+
+.temp-value {
+    font-size: 68px;
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+.temp-unit {
+    font-size: 32px;
+    font-weight: 300;
+    vertical-align: top;
+}
+
+.condition-text {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    text-transform: capitalize;
+    transform: translateZ(25px);
+}
+
+/* Grid Layout for Weather Details */
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    transform: translateZ(30px);
+}
+
+.detail-card {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px 8px;
+    border-radius: 18px;
+    text-align: center;
+}
+
+.detail-label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.detail-value {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+/* Error Badge */
+.error-badge {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    padding: 12px;
+    border-radius: 14px;
+    color: #fca5a5;
+    margin-top: 15px;
+    transform: translateZ(20px);
+}
